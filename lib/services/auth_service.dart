@@ -8,10 +8,10 @@ import '../database/database_helper.dart';
 class AuthService {
   static const _penyimpanan = FlutterSecureStorage();
   static const _kunciSesi = 'sesi_username';
-  // SHA-256 menghasilkan 64 karakter hex dan tidak bisa dibalik
+
   static String hash(String password) =>
       sha256.convert(utf8.encode(password)).toString();
-  // false bila username sudah dipakai
+
   static Future<bool> daftar(String username, String password) async {
     final db = DatabaseHelper.instance;
     if (await db.cariUser(username) != null) return false;

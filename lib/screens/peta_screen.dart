@@ -6,7 +6,10 @@ import 'package:latlong2/latlong.dart';
 
 import '../database/database_helper.dart';
 import '../models/kunjungan.dart';
+import '../services/jaringan_service.dart';
 import '../services/lokasi_service.dart';
+import '../widgets/halaman_pesan.dart';
+import '../widgets/pantau_jaringan.dart';
 
 class PetaScreen extends StatefulWidget {
   const PetaScreen({super.key});
@@ -55,30 +58,22 @@ class _PetaScreenState extends State<PetaScreen> {
     final warna = Theme.of(context).colorScheme;
     return Scaffold(
       appBar: AppBar(title: const Text('Peta Kunjungan')),
-      body: !_siap
-          ? const Center(child: CircularProgressIndicator())
-          : FlutterMap(
-              options: MapOptions(initialCenter: _pusat, initialZoom: 14),
-              children: [
-                TileLayer(
-                  urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                  userAgentPackageName: 'com.example.sikunjung',
-                ),
-                MarkerLayer(
-                  markers: [
-                    for (final k in _data) _marker(k, warna.error),
-                    if (_posisi != null)
-                      Marker(
-                        point: _pusat,
-                        child: Icon(Icons.my_location, color: warna.primary),
-                      ),
-                  ],
-                ),
-                const SimpleAttributionWidget(
-                  source: Text('OpenStreetMap contributors'),
-                ),
-              ],
-            ),
+      body: PantauJaringan(
+        builder: (context, hasil) {
+          if (!JaringanService.online(hasil)) {
+            return const HalamanPesan(
+              ikon: Icons.cloud_off,
+              judul: 'Peta butuh internet',
+              keterangan:
+              'Data kunjungan tetap tersimpan. '
+                  'Buka lagi peta saat online.',
+            );
+          }
+          return !_siap
+              ? const Center(child: CircularProgressIndicator())
+              : _peta();
+        },
+      ),
     );
   }
 
@@ -109,6 +104,32 @@ class _PetaScreenState extends State<PetaScreen> {
           onPressed: () => LokasiService.navigasi(k.latitude!, k.longitude!),
         ),
       ),
+    );
+  }
+
+  Widget _peta() {
+    final warna = Theme.of(context).colorScheme;
+    return FlutterMap(
+      options: MapOptions(initialCenter: _pusat, initialZoom: 14),
+      children: [
+        TileLayer(
+          urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+          userAgentPackageName: 'com.example.sikunjung',
+        ),
+        MarkerLayer(
+          markers: [
+            for (final k in _data) _marker(k, warna.error),
+            if (_posisi != null)
+              Marker(
+                point: _pusat,
+                child: Icon(Icons.my_location, color: warna.primary),
+              ),
+          ],
+        ),
+        const SimpleAttributionWidget(
+          source: Text('OpenStreetMap contributors'),
+        ),
+      ],
     );
   }
 }

@@ -61,17 +61,6 @@ class _BerandaScreenState extends State<BerandaScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      /*appBar: AppBar(
-        title: const Text('Beranda'),
-        actions: [
-          IconButton(
-            tooltip: 'Keluar',
-            icon: const Icon(Icons.logout),
-            onPressed: _keluar,
-          ),
-        ],
-      ),*/
-
       appBar: AppBar(
         title: const Text('Beranda'),
         actions: [
