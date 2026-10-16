@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../database/database_helper.dart';
 import '../models/kunjungan.dart';
+import '../services/deteksi_goyang.dart';
 import 'detail_kunjungan_screen.dart';
 import 'form_kunjungan_screen.dart';
 class DaftarKunjunganScreen extends StatefulWidget {
@@ -13,11 +14,27 @@ class DaftarKunjunganScreen extends StatefulWidget {
 class _DaftarKunjunganScreenState extends State<DaftarKunjunganScreen> {
   List<Kunjungan> _semua = [];
   String _kata = '';
+  late final _goyang = DeteksiGoyang(_segarkan);
 
   @override
   void initState() {
     super.initState();
     _muat();
+    _goyang.mulai();
+  }
+
+  @override
+  void dispose() {
+    _goyang.berhenti();
+    super.dispose();
+  }
+
+  Future<void> _segarkan() async {
+    await _muat();
+    if (!mounted) return;
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(const SnackBar(content: Text('Daftar diperbarui')));
   }
 
   Future<void> _muat() async {

@@ -18,7 +18,6 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Future<void> _lanjut() async {
     await Future.delayed(const Duration(seconds: 2));
-// Sesi masih ada -> langsung ke Dashboard tanpa login ulang
     final username = await AuthService.sesiAktif();
     if (!mounted) return;
     Navigator.pushReplacement(
@@ -35,7 +34,7 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     final warna = Theme.of(context).colorScheme;
     return Scaffold(
-      backgroundColor: warna.primary,
+      backgroundColor: Colors.white,
       body: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -45,16 +44,16 @@ class _SplashScreenState extends State<SplashScreen> {
             Text(
               'SiKunjung',
               style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                color: warna.onPrimary,
+                color: warna.primary,
                 fontWeight: FontWeight.bold,
               ),
             ),
             Text(
               'Sistem Informasi Kunjungan Lapangan',
-              style: TextStyle(color: warna.onPrimary),
+              style: TextStyle(color: warna.primary),
             ),
             const SizedBox(height: 32),
-            CircularProgressIndicator(color: warna.onPrimary),
+            CircularProgressIndicator(color: warna.primary),
           ],
         ),
       ),

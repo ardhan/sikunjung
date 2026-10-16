@@ -47,6 +47,8 @@ dependencies:
   package_info_plus: ^10.2.2
   crypto: ^3.0.7
   flutter_secure_storage: ^11.2.0
+  sensors_plus: ^7.1.1
+  connectivity_plus: ^7.3.1
 
 dev_dependencies:
   flutter_test:
